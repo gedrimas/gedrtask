@@ -1,3 +1,5 @@
+import roundTo from "round-to";
+import AggrDataForCommEval from "./AggrDataForCommEval.js";
 import CommissionCounter from "./CommissionCounter.js";
 
 const o = [
@@ -66,17 +68,17 @@ const o = [
   },
 ];
 
-const outerProps = ["date", "user_id", "user_type", "type", "operation"];
-const innerProps = ["amount", "currency"];
+// const foo = async () => {
+//   try {
+//     const CommissionAggrData = new AggrDataForCommEval(o);
+//     await CommissionAggrData.getAggregateDataForCommEval();
+//     console.log("INPUT", CommissionAggrData.inputDataWithConfig);
+//   } catch (error) {
+//     console.log("TEST", error.message);
+//   }
+// };
 
-// const r = new CommissionCounter(o);
-// r.isInpitDatavalid(outerProps, innerProps);
-// console.log(r.result);
+// foo();
 
-const foo = async () => {
-  const r = new CommissionCounter(o);
-  await r.getConfig();
-  console.log("TEST", r.inputDataWithConfig);
-};
-
-foo();
+const t = new CommissionCounter().cash_in();
+console.log(t);
