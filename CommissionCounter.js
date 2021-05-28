@@ -152,6 +152,7 @@ export default class CommissionCounter {
       return userOperations;
     });
 
+    //remove empty elemtnts and return arrays of operations of each user
     return operationsByUserId.filter((element) => element != null);
   }
 
