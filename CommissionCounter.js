@@ -27,14 +27,16 @@ export default class CommissionCounter {
   ];
 
   //calculate commission
-  commissionCalculator(sum, percent, maxComAmount) {
-    console.log("sum", sum);
-    console.log("percent", percent);
+  //   commissionCalculator(sum, percent, maxComAmount) {
+  //     const commBeforeRounding = (sum * percent) / 100;
+  //     if (commBeforeRounding > maxComAmount) return 5;
+  //     const roundedCommition = roundTo.up(commBeforeRounding, 2);
+  //     return roundedCommition;
+  //   }
 
-    const commBeforeRounding = (sum * percent) / 100;
-    if (commBeforeRounding > maxComAmount) return 5;
-    const roundedCommition = roundTo.up(commBeforeRounding, 2);
-    return roundedCommition;
+  // count commission based pecents only
+  getCommPercentsOnly(sum, percents) {
+    return (sum * percents) / 100;
   }
 
   cash_in() {
@@ -46,14 +48,121 @@ export default class CommissionCounter {
         max: { amount: maxComAmount },
       } = operation;
 
+      const commBasedPercentsOnly = this.getCommPercentsOnly(
+        operAmount,
+        percents
+      );
+
+      const commission =
+        commBasedPercentsOnly > maxComAmount ? 5 : commBasedPercentsOnly;
+
       return {
-        commission: this.commissionCalculator(
-          operAmount,
-          percents,
-          maxComAmount
-        ),
-        date: date,
+        commission,
+        date,
       };
+    });
+  }
+
+  cashOutNatural = [
+    {
+      date: "2016-01-06",
+      user_id: 1,
+      user_type: "natural",
+      type: "cash_out",
+      operation: { amount: 30000, currency: "EUR" },
+      percents: 0.3,
+      week_limit: { amount: 1000, currency: "EUR" },
+    },
+    {
+      date: "2016-01-07",
+      user_id: 1,
+      user_type: "natural",
+      type: "cash_out",
+      operation: { amount: 1000, currency: "EUR" },
+      percents: 0.3,
+      week_limit: { amount: 1000, currency: "EUR" },
+    },
+    {
+      date: "2016-01-07",
+      user_id: 1,
+      user_type: "natural",
+      type: "cash_out",
+      operation: { amount: 100, currency: "EUR" },
+      percents: 0.3,
+      week_limit: { amount: 1000, currency: "EUR" },
+    },
+    {
+      date: "2016-01-10",
+      user_id: 1,
+      user_type: "natural",
+      type: "cash_out",
+      operation: { amount: 100, currency: "EUR" },
+      percents: 0.3,
+      week_limit: { amount: 1000, currency: "EUR" },
+    },
+    {
+      date: "2016-01-10",
+      user_id: 3,
+      user_type: "natural",
+      type: "cash_out",
+      operation: { amount: 1000, currency: "EUR" },
+      percents: 0.3,
+      week_limit: { amount: 1000, currency: "EUR" },
+    },
+    {
+      date: "2016-02-15",
+      user_id: 1,
+      user_type: "natural",
+      type: "cash_out",
+      operation: { amount: 300, currency: "EUR" },
+      percents: 0.3,
+      week_limit: { amount: 1000, currency: "EUR" },
+    },
+
+    {
+      date: "2016-01-10",
+      user_id: 2,
+      user_type: "natural",
+      type: "cash_out",
+      operation: { amount: 1000, currency: "EUR" },
+      percents: 0.3,
+      week_limit: { amount: 1000, currency: "EUR" },
+    },
+    {
+      date: "2016-02-15",
+      user_id: 2,
+      user_type: "natural",
+      type: "cash_out",
+      operation: { amount: 300, currency: "EUR" },
+      percents: 0.3,
+      week_limit: { amount: 1000, currency: "EUR" },
+    },
+  ];
+
+  splitOperationsByUserId() {
+    const operationsByUserId = this.cashOutNatural.map((operation) => {
+      const userOperations = this.cashOutNatural.filter((userOperation, i) => {
+        if (operation.user_id === userOperation.user_id) {
+          delete this.cashOutNatural[i];
+          return true;
+        }
+        return false;
+      });
+
+      return userOperations;
+    });
+
+    return operationsByUserId.filter((element) => element != null);
+  }
+
+  cash_out_natural() {
+    this.cashOutNatural.map((operation) => {
+      const {
+        user_id,
+        date,
+        operation: { amount: operAmount },
+        week_limit: { amount: maxComAmountPerWeek },
+      } = operation;
     });
   }
 }

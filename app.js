@@ -80,5 +80,5 @@ const o = [
 
 // foo();
 
-const t = new CommissionCounter().cash_in();
+const t = new CommissionCounter().splitOperationsByUserId();
 console.log(t);
