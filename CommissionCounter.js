@@ -291,14 +291,43 @@ export default class CommissionCounter {
         return this.splitEachUserOperationsByWeekNumber(userOperations);
       }
     );
-    return splitUserOperationsByWeekNum;
-    // this.cashOutNatural.map((operation) => {
-    //   const {
-    //     user_id,
-    //     date,
-    //     operation: { amount: operAmount },
-    //     week_limit: { amount: maxComAmountPerWeek },
-    //   } = operation;
-    // });
+    //return splitUserOperationsByWeekNum;
+
+    const weeklyCommitionCounter = (eachUserOprations) => {
+      const operationWithcommission = [];
+
+      eachUserOprations.forEach((weeksOperations) => {
+        let weeklyCashOutSum = 0;
+        let isWeeklyLimitExceeded = false;
+
+        weeksOperations.forEach((operation) => {
+          const {
+            date,
+            percents,
+            operation: { amount: operAmount },
+            week_limit: { amount: maxComAmountPerWeek },
+          } = operation;
+
+          weeklyCashOutSum += operAmount;
+          let commission = 0;
+
+          if (isWeeklyLimitExceeded) {
+            commission = (operAmount * percents) / 100;
+          } else if (weeklyCashOutSum > maxComAmountPerWeek) {
+            isWeeklyLimitExceeded = true;
+            const exceededSum = weeklyCashOutSum - maxComAmountPerWeek;
+            commission = (exceededSum * percents) / 100;
+          }
+
+          operationWithcommission.push({ date, commission });
+        });
+      });
+      return operationWithcommission;
+    };
+
+    return splitUserOperationsByWeekNum.map((eachUserOprations) => {
+      const commission = weeklyCommitionCounter(eachUserOprations);
+      return commission;
+    });
   }
 }

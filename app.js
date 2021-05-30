@@ -82,8 +82,7 @@ const o = [
 
 // foo();
 
-const t = new CommissionCounter().cash_out_natural();
-//console.log(t);
+const t = new CommissionCounter().cash_in();
 console.log(util.inspect(t, { showHidden: false, depth: null }));
 // var weeknumber = moment("2016-02-15", "YYYYMMDD").isoWeek();
 // console.log("weeknumber", weeknumber);
