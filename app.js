@@ -2,6 +2,7 @@ import roundTo from "round-to";
 import AggrDataForCommEval from "./AggrDataForCommEval.js";
 import CommissionCounter from "./CommissionCounter.js";
 import moment from "moment";
+import util from "util";
 
 const o = [
   {
@@ -81,34 +82,11 @@ const o = [
 
 // foo();
 
-// const t = new CommissionCounter().splitOperationsByUserId();
-// console.log(t);
+const t = new CommissionCounter().cash_out_natural();
+//console.log(t);
+console.log(util.inspect(t, { showHidden: false, depth: null }));
+// var weeknumber = moment("2016-02-15", "YYYYMMDD").isoWeek();
+// console.log("weeknumber", weeknumber);
 
-Date.prototype.getWeek = function () {
-  var date = new Date(this.getTime());
-  date.setHours(0, 0, 0, 0);
-  // Thursday in current week decides the year.
-  date.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
-  // January 4 is always in week 1.
-  var week1 = new Date(date.getFullYear(), 0, 4);
-  // Adjust to Thursday in week 1 and count number of weeks from date to week1.
-  return (
-    1 +
-    Math.round(
-      ((date.getTime() - week1.getTime()) / 86400000 -
-        3 +
-        ((week1.getDay() + 6) % 7)) /
-        7
-    )
-  );
-};
-
-// const t = new Date("2019-01-07");
-// console.log("t", t);
-// console.log("t", t.getWeek());
-
-var weeknumber = moment("2020-12-30", "YYYYMMDD").isoWeek();
-console.log("weeknumber", weeknumber);
-
-var day = moment("2021-01-01", "YYYYMMDD").format("dddd");
-console.log("day", day);
+// var day = moment("2021-01-01", "YYYYMMDD").format("dddd");
+// console.log("day", day);

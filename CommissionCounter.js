@@ -1,4 +1,5 @@
 import roundTo from "round-to";
+import moment from "moment";
 
 export default class CommissionCounter {
   //   constructor(operationData) {
@@ -137,33 +138,167 @@ export default class CommissionCounter {
       percents: 0.3,
       week_limit: { amount: 1000, currency: "EUR" },
     },
+    {
+      date: "2016-02-18",
+      user_id: 2,
+      user_type: "natural",
+      type: "cash_out",
+      operation: { amount: 300, currency: "EUR" },
+      percents: 0.3,
+      week_limit: { amount: 1000, currency: "EUR" },
+    },
+    {
+      date: "2016-02-21",
+      user_id: 2,
+      user_type: "natural",
+      type: "cash_out",
+      operation: { amount: 300, currency: "EUR" },
+      percents: 0.3,
+      week_limit: { amount: 1000, currency: "EUR" },
+    },
+    {
+      date: "2016-02-22",
+      user_id: 2,
+      user_type: "natural",
+      type: "cash_out",
+      operation: { amount: 300, currency: "EUR" },
+      percents: 0.3,
+      week_limit: { amount: 1000, currency: "EUR" },
+    },
   ];
 
-  splitOperationsByUserId() {
-    const operationsByUserId = this.cashOutNatural.map((operation) => {
-      const userOperations = this.cashOutNatural.filter((userOperation, i) => {
-        if (operation.user_id === userOperation.user_id) {
-          delete this.cashOutNatural[i];
+  weekOperations = [
+    {
+      date: "2016-01-06", //1
+      user_id: 1,
+      user_type: "natural",
+      type: "cash_out",
+      operation: { amount: 30000, currency: "EUR" },
+      percents: 0.3,
+      week_limit: { amount: 1000, currency: "EUR" },
+    },
+    {
+      date: "2016-01-07", //1
+      user_id: 1,
+      user_type: "natural",
+      type: "cash_out",
+      operation: { amount: 1000, currency: "EUR" },
+      percents: 0.3,
+      week_limit: { amount: 1000, currency: "EUR" },
+    },
+    {
+      date: "2016-01-07", //1
+      user_id: 1,
+      user_type: "natural",
+      type: "cash_out",
+      operation: { amount: 100, currency: "EUR" },
+      percents: 0.3,
+      week_limit: { amount: 1000, currency: "EUR" },
+    },
+    {
+      date: "2016-01-10", //1
+      user_id: 1,
+      user_type: "natural",
+      type: "cash_out",
+      operation: { amount: 100, currency: "EUR" },
+      percents: 0.3,
+      week_limit: { amount: 1000, currency: "EUR" },
+    },
+    {
+      date: "2016-02-15", //7
+      user_id: 1,
+      user_type: "natural",
+      type: "cash_out",
+      operation: { amount: 300, currency: "EUR" },
+      percents: 0.3,
+      week_limit: { amount: 1000, currency: "EUR" },
+    },
+    {
+      date: "2016-02-18",
+      user_id: 2,
+      user_type: "natural",
+      type: "cash_out",
+      operation: { amount: 300, currency: "EUR" },
+      percents: 0.3,
+      week_limit: { amount: 1000, currency: "EUR" },
+    },
+    {
+      date: "2016-02-21",
+      user_id: 2,
+      user_type: "natural",
+      type: "cash_out",
+      operation: { amount: 300, currency: "EUR" },
+      percents: 0.3,
+      week_limit: { amount: 1000, currency: "EUR" },
+    },
+    {
+      date: "2016-02-22",
+      user_id: 2,
+      user_type: "natural",
+      type: "cash_out",
+      operation: { amount: 300, currency: "EUR" },
+      percents: 0.3,
+      week_limit: { amount: 1000, currency: "EUR" },
+    },
+  ];
+
+  splitArrayByObjKey = (arrayOfObjets, key, checkFunction) => {
+    const result = arrayOfObjets.map((outerItem) => {
+      const filterdArray = arrayOfObjets.filter((innerItem, i) => {
+        if (checkFunction(outerItem[key], innerItem[key])) {
+          delete arrayOfObjets[i];
           return true;
         }
         return false;
       });
-
-      return userOperations;
+      return filterdArray;
     });
 
-    //remove empty elemtnts and return arrays of operations of each user
-    return operationsByUserId.filter((element) => element != null);
-  }
+    //remove empty elemtnts and return array of filtered arrays
+    return result.filter((element) => element != null);
+  };
+
+  splitOperationsByUserId = (cashOutNatOperations) => {
+    const checkByUserId = (outerCycleUserId, innerCycleUserId) => {
+      const result = outerCycleUserId === innerCycleUserId;
+      return result;
+    };
+
+    return this.splitArrayByObjKey(
+      cashOutNatOperations,
+      "user_id",
+      checkByUserId
+    );
+  };
+
+  splitEachUserOperationsByWeekNumber = (userOperations) => {
+    const checkByWeekNumber = (outerCycleDate, innerCycleDate) => {
+      const getWeekNumber = (date) => {
+        return moment(`${date}`, "YYYYMMDD").isoWeek();
+      };
+
+      const result =
+        getWeekNumber(outerCycleDate) === getWeekNumber(innerCycleDate);
+      return result;
+    };
+    return this.splitArrayByObjKey(userOperations, "date", checkByWeekNumber);
+  };
 
   cash_out_natural() {
-    this.cashOutNatural.map((operation) => {
-      const {
-        user_id,
-        date,
-        operation: { amount: operAmount },
-        week_limit: { amount: maxComAmountPerWeek },
-      } = operation;
-    });
+    const splitedByUserId = this.splitOperationsByUserId(this.cashOutNatural);
+    const splitUserOperationsByWeekNum = splitedByUserId.map(
+      (userOperations) => {
+        return this.splitEachUserOperationsByWeekNumber(userOperations);
+      }
+    );
+    return splitUserOperationsByWeekNum;
+    // this.cashOutNatural.map((operation) => {
+    //   const {
+    //     user_id,
+    //     date,
+    //     operation: { amount: operAmount },
+    //     week_limit: { amount: maxComAmountPerWeek },
+    //   } = operation;
+    // });
   }
 }
