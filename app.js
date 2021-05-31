@@ -70,20 +70,25 @@ const o = [
   },
 ];
 
-// const foo = async () => {
-//   try {
-//     const CommissionAggrData = new AggrDataForCommEval(o);
-//     await CommissionAggrData.getAggregateDataForCommEval();
-//     console.log("INPUT", CommissionAggrData.inputDataWithConfig);
-//   } catch (error) {
-//     console.log("TEST", error.message);
-//   }
-// };
+const foo = async () => {
+  try {
+    const CommissionAggrData = new AggrDataForCommEval(o);
+    await CommissionAggrData.getAggregateDataForCommEval();
+    //console.log("INPUT", CommissionAggrData.inputDataWithConfig);
+    const operationsWithConfig = CommissionAggrData.inputDataWithConfig;
 
-// foo();
+    const t = new CommissionCounter(operationsWithConfig).countCommissions();
 
-const t = new CommissionCounter().cash_in();
-console.log(util.inspect(t, { showHidden: false, depth: null }));
+    console.log(util.inspect(t, { showHidden: false, depth: null }));
+  } catch (error) {
+    console.log("TEST", error.message);
+  }
+};
+
+foo();
+
+// const t = new CommissionCounter(o).countCommissions();
+// console.log(util.inspect(t, { showHidden: false, depth: null }));
 // var weeknumber = moment("2016-02-15", "YYYYMMDD").isoWeek();
 // console.log("weeknumber", weeknumber);
 

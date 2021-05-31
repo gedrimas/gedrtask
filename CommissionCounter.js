@@ -2,30 +2,9 @@ import roundTo from "round-to";
 import moment from "moment";
 
 export default class CommissionCounter {
-  //   constructor(operationData) {
-  //     this.operationData = operationData;
-  //   }
-
-  cashIn = [
-    {
-      date: "2016-01-05",
-      user_id: 1,
-      user_type: "natural",
-      type: "cash_in",
-      operation: { amount: 200, currency: "EUR" },
-      percents: 0.03,
-      max: { amount: 5, currency: "EUR" },
-    },
-    {
-      date: "2016-01-10",
-      user_id: 2,
-      user_type: "juridical",
-      type: "cash_in",
-      operation: { amount: 1000000, currency: "EUR" },
-      percents: 0.03,
-      max: { amount: 5, currency: "EUR" },
-    },
-  ];
+  constructor(allOperations) {
+    this.allOperations = allOperations;
+  }
 
   //calculate commission
   //   commissionCalculator(sum, percent, maxComAmount) {
@@ -36,211 +15,9 @@ export default class CommissionCounter {
   //   }
 
   // count commission based pecents only
-  getCommPercentsOnly(sum, percents) {
+  getCommonCommission(sum, percents) {
     return (sum * percents) / 100;
   }
-
-  cash_in() {
-    return this.cashIn.map((operation) => {
-      const {
-        date,
-        operation: { amount: operAmount },
-        percents,
-        max: { amount: maxComAmount },
-      } = operation;
-
-      const commBasedPercentsOnly = this.getCommPercentsOnly(
-        operAmount,
-        percents
-      );
-
-      const commission =
-        commBasedPercentsOnly > maxComAmount ? 5 : commBasedPercentsOnly;
-
-      return {
-        commission,
-        date,
-      };
-    });
-  }
-
-  cashOutNatural = [
-    {
-      date: "2016-01-06",
-      user_id: 1,
-      user_type: "natural",
-      type: "cash_out",
-      operation: { amount: 30000, currency: "EUR" },
-      percents: 0.3,
-      week_limit: { amount: 1000, currency: "EUR" },
-    },
-    {
-      date: "2016-01-07",
-      user_id: 1,
-      user_type: "natural",
-      type: "cash_out",
-      operation: { amount: 1000, currency: "EUR" },
-      percents: 0.3,
-      week_limit: { amount: 1000, currency: "EUR" },
-    },
-    {
-      date: "2016-01-07",
-      user_id: 1,
-      user_type: "natural",
-      type: "cash_out",
-      operation: { amount: 100, currency: "EUR" },
-      percents: 0.3,
-      week_limit: { amount: 1000, currency: "EUR" },
-    },
-    {
-      date: "2016-01-10",
-      user_id: 1,
-      user_type: "natural",
-      type: "cash_out",
-      operation: { amount: 100, currency: "EUR" },
-      percents: 0.3,
-      week_limit: { amount: 1000, currency: "EUR" },
-    },
-    {
-      date: "2016-01-10",
-      user_id: 3,
-      user_type: "natural",
-      type: "cash_out",
-      operation: { amount: 1000, currency: "EUR" },
-      percents: 0.3,
-      week_limit: { amount: 1000, currency: "EUR" },
-    },
-    {
-      date: "2016-02-15",
-      user_id: 1,
-      user_type: "natural",
-      type: "cash_out",
-      operation: { amount: 300, currency: "EUR" },
-      percents: 0.3,
-      week_limit: { amount: 1000, currency: "EUR" },
-    },
-
-    {
-      date: "2016-01-10",
-      user_id: 2,
-      user_type: "natural",
-      type: "cash_out",
-      operation: { amount: 1000, currency: "EUR" },
-      percents: 0.3,
-      week_limit: { amount: 1000, currency: "EUR" },
-    },
-    {
-      date: "2016-02-15",
-      user_id: 2,
-      user_type: "natural",
-      type: "cash_out",
-      operation: { amount: 300, currency: "EUR" },
-      percents: 0.3,
-      week_limit: { amount: 1000, currency: "EUR" },
-    },
-    {
-      date: "2016-02-18",
-      user_id: 2,
-      user_type: "natural",
-      type: "cash_out",
-      operation: { amount: 300, currency: "EUR" },
-      percents: 0.3,
-      week_limit: { amount: 1000, currency: "EUR" },
-    },
-    {
-      date: "2016-02-21",
-      user_id: 2,
-      user_type: "natural",
-      type: "cash_out",
-      operation: { amount: 300, currency: "EUR" },
-      percents: 0.3,
-      week_limit: { amount: 1000, currency: "EUR" },
-    },
-    {
-      date: "2016-02-22",
-      user_id: 2,
-      user_type: "natural",
-      type: "cash_out",
-      operation: { amount: 300, currency: "EUR" },
-      percents: 0.3,
-      week_limit: { amount: 1000, currency: "EUR" },
-    },
-  ];
-
-  weekOperations = [
-    {
-      date: "2016-01-06", //1
-      user_id: 1,
-      user_type: "natural",
-      type: "cash_out",
-      operation: { amount: 30000, currency: "EUR" },
-      percents: 0.3,
-      week_limit: { amount: 1000, currency: "EUR" },
-    },
-    {
-      date: "2016-01-07", //1
-      user_id: 1,
-      user_type: "natural",
-      type: "cash_out",
-      operation: { amount: 1000, currency: "EUR" },
-      percents: 0.3,
-      week_limit: { amount: 1000, currency: "EUR" },
-    },
-    {
-      date: "2016-01-07", //1
-      user_id: 1,
-      user_type: "natural",
-      type: "cash_out",
-      operation: { amount: 100, currency: "EUR" },
-      percents: 0.3,
-      week_limit: { amount: 1000, currency: "EUR" },
-    },
-    {
-      date: "2016-01-10", //1
-      user_id: 1,
-      user_type: "natural",
-      type: "cash_out",
-      operation: { amount: 100, currency: "EUR" },
-      percents: 0.3,
-      week_limit: { amount: 1000, currency: "EUR" },
-    },
-    {
-      date: "2016-02-15", //7
-      user_id: 1,
-      user_type: "natural",
-      type: "cash_out",
-      operation: { amount: 300, currency: "EUR" },
-      percents: 0.3,
-      week_limit: { amount: 1000, currency: "EUR" },
-    },
-    {
-      date: "2016-02-18",
-      user_id: 2,
-      user_type: "natural",
-      type: "cash_out",
-      operation: { amount: 300, currency: "EUR" },
-      percents: 0.3,
-      week_limit: { amount: 1000, currency: "EUR" },
-    },
-    {
-      date: "2016-02-21",
-      user_id: 2,
-      user_type: "natural",
-      type: "cash_out",
-      operation: { amount: 300, currency: "EUR" },
-      percents: 0.3,
-      week_limit: { amount: 1000, currency: "EUR" },
-    },
-    {
-      date: "2016-02-22",
-      user_id: 2,
-      user_type: "natural",
-      type: "cash_out",
-      operation: { amount: 300, currency: "EUR" },
-      percents: 0.3,
-      week_limit: { amount: 1000, currency: "EUR" },
-    },
-  ];
 
   splitArrayByObjKey = (arrayOfObjets, key, checkFunction) => {
     const result = arrayOfObjets.map((outerItem) => {
@@ -284,17 +61,43 @@ export default class CommissionCounter {
     return this.splitArrayByObjKey(userOperations, "date", checkByWeekNumber);
   };
 
-  cash_out_natural() {
-    const splitedByUserId = this.splitOperationsByUserId(this.cashOutNatural);
+  cash_in(cashInOperations) {
+    const result = cashInOperations.map((operation) => {
+      const {
+        date,
+        operation: { amount: operAmount },
+        percents,
+        max: { amount: maxComAmount },
+      } = operation;
+
+      const commBasedPercentsOnly = this.getCommonCommission(
+        operAmount,
+        percents
+      );
+
+      const commission =
+        commBasedPercentsOnly > maxComAmount ? 5 : commBasedPercentsOnly;
+
+      return {
+        commission,
+        date,
+      };
+    });
+    return result;
+  }
+
+  cash_out_natural(cashOutNaturalOperations) {
+    const splitedByUserId = this.splitOperationsByUserId(
+      cashOutNaturalOperations
+    );
     const splitUserOperationsByWeekNum = splitedByUserId.map(
       (userOperations) => {
         return this.splitEachUserOperationsByWeekNumber(userOperations);
       }
     );
-    //return splitUserOperationsByWeekNum;
 
     const weeklyCommitionCounter = (eachUserOprations) => {
-      const operationWithcommission = [];
+      const cashOutNatCommissions = [];
 
       eachUserOprations.forEach((weeksOperations) => {
         let weeklyCashOutSum = 0;
@@ -312,22 +115,85 @@ export default class CommissionCounter {
           let commission = 0;
 
           if (isWeeklyLimitExceeded) {
-            commission = (operAmount * percents) / 100;
+            commission = this.getCommonCommission(operAmount, percents);
           } else if (weeklyCashOutSum > maxComAmountPerWeek) {
             isWeeklyLimitExceeded = true;
             const exceededSum = weeklyCashOutSum - maxComAmountPerWeek;
-            commission = (exceededSum * percents) / 100;
+            commission = this.getCommonCommission(exceededSum, percents);
           }
 
-          operationWithcommission.push({ date, commission });
+          cashOutNatCommissions.push({ date, commission });
         });
       });
-      return operationWithcommission;
+
+      return cashOutNatCommissions;
     };
 
-    return splitUserOperationsByWeekNum.map((eachUserOprations) => {
-      const commission = weeklyCommitionCounter(eachUserOprations);
-      return commission;
-    });
+    const cashOutNatCom = splitUserOperationsByWeekNum.map(
+      (weeklyhUserOprations) => {
+        const commissions = weeklyCommitionCounter(weeklyhUserOprations);
+        return commissions;
+      }
+    );
+
+    const allCashOutNatCommitions = cashOutNatCom.flat();
+    return allCashOutNatCommitions;
   }
+
+  cash_out_legal(cashOutLegalOperations) {
+    const result = cashOutLegalOperations.map((operation) => {
+      const {
+        date,
+        operation: { amount: operAmount },
+        percents,
+        min: { amount: minComAmount },
+      } = operation;
+
+      const commBasedPercentsOnly = this.getCommonCommission(
+        operAmount,
+        percents
+      );
+
+      const commission =
+        commBasedPercentsOnly < minComAmount ? 0.5 : commBasedPercentsOnly;
+
+      return {
+        commission,
+        date,
+      };
+    });
+    return result;
+  }
+
+  countCommissions = () => {
+    const getAllCommissiOfExactType = (opType, opUser_type) => {
+      if (opType && opUser_type) {
+        const operations = this.allOperations.filter((operation) => {
+          const { type, user_type } = operation;
+          return opType === type && opUser_type === user_type;
+        });
+        return operations;
+      } else if (opType) {
+        const operations = this.allOperations.filter((operation) => {
+          const { type } = operation;
+          return opType === type;
+        });
+        return operations;
+      } else {
+        return [];
+      }
+    };
+
+    const cashIn = getAllCommissiOfExactType("cash_in");
+    const cashOutNatural = getAllCommissiOfExactType("cash_out", "natural");
+    const cashOutLegal = getAllCommissiOfExactType("cash_out", "juridical");
+
+    const allComissions = [
+      ...this.cash_in(cashIn),
+      ...this.cash_out_natural(cashOutNatural),
+      ...this.cash_out_legal(cashOutLegal),
+    ];
+
+    return allComissions;
+  };
 }
