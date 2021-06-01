@@ -1,4 +1,5 @@
 import fetchConfig from "./api/fetchConfig.js";
+import moment from "moment";
 
 export default class AggrDataForCommEval {
   inputDataWithConfig = [];
@@ -9,15 +10,20 @@ export default class AggrDataForCommEval {
     this.inputData = inputData;
   }
 
+  //check is date valid
+  #isValidDate = (date) => {
+    const mDate = moment(date);
+    return mDate.isValid();
+  };
+
   //check if input data are valid
-  isInpitDatavalid(props, operationProps) {
+  #isInpitDatavalid = (props, operationProps) => {
     this.inputData.forEach((operationObj) => {
       props.forEach((prop) => {
         if (operationObj.hasOwnProperty(prop)) {
           switch (prop) {
             case "date":
-              //TODO
-              if (typeof operationObj[prop] !== "string") {
+              if (!this.#isValidDate(operationObj[prop])) {
                 throw new Error("Invalid input data");
               }
               break;
@@ -75,7 +81,7 @@ export default class AggrDataForCommEval {
         }
       });
     });
-  }
+  };
 
   //get config from API and merge it with operation object
   async getConfig() {
@@ -97,8 +103,8 @@ export default class AggrDataForCommEval {
     }
   }
 
-  async getAggregateDataForCommEval() {
-    this.isInpitDatavalid(this.props, this.innerProps);
+  async getAggregatedDataForCommEval() {
+    this.#isInpitDatavalid(this.props, this.innerProps);
     await this.getConfig();
   }
 }
