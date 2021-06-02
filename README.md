@@ -10,4 +10,4 @@ HOW TO USE
 2. cd gedrtask (go to the root of the project)
 3. npm i (install dependencies)
 4. node app.js input.json (run the program)
-5. npm run test
+5. npm run test (run test)
